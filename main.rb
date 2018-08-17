@@ -370,8 +370,8 @@ while choise != 'stop'
     when '16'
       puts 'Train    Speed   SpeedHistory'
       trains.each do |t|
-        puts "#{t.number.rjust(8, ' ')}" +
-          "#{t.speed.to_s.rjust(6, ' ')}" +
+        puts "#{t.number.rjust(8, ' ')}" \
+          "#{t.speed.to_s.rjust(6, ' ')}" \
           "   #{t.speed_history.join(',')}"
       end
       puts
@@ -381,10 +381,10 @@ while choise != 'stop'
       train = trains.select { |t| t.number == number }.first
 
       if train
-          puts 'what do you want: '
-          puts '  1 - accelerate'
-          puts '  2 - stop'
-          gets.to_i ? train.accelerate : train.breake
+        puts 'what do you want: '
+        puts '  1 - accelerate'
+        puts '  2 - stop'
+        gets.to_i ? train.accelerate : train.breake
 
       else
         puts 'Train not found.'

@@ -2,7 +2,7 @@
 class PassengerTrain < Train
   validate :number, :presence
   validate :number, :format, TRAIN_NUMBER
- 
+
   validate :train_type, :presence
   validate :train_type, :format, TRAIN_TYPE
   validate :train_type, :type, String
