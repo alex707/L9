@@ -21,18 +21,6 @@ class Station
     register_instance
   end
 
-  # def validate!
-  #   raise 'Name can not be nil' if name.nil?
-  #   raise 'Name should be at least 1' if name.empty?
-  #   true
-  # end
-
-  # def valid?
-  #   validate!
-  # rescue StandardError
-  #   false
-  # end
-
   def take_train(train)
     @trains << train
   end

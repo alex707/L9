@@ -1,5 +1,6 @@
 load './instance_counter.rb'
 load './accessors.rb'
+load './validation.rb'
 load './company.rb'
 load './train.rb'
 

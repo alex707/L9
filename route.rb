@@ -5,6 +5,9 @@ class Route
 
   attr_reader :intermediate, :st_begin, :st_end
 
+  validate :st_begin, :type, Station
+  validate :st_end, :type, Station
+
   def initialize(st_begin, st_end)
     @st_begin  = st_begin
     @st_end    = st_end
@@ -13,20 +16,6 @@ class Route
 
     validate!
     register_instance
-  end
-
-  def validate!
-    unless st_begin.is_a?(Station) && st_end.is_a?(Station)
-      raise 'Station begin and station end must be a station object!'
-    end
-
-    true
-  end
-
-  def valid?
-    validate!
-  rescue StandardError
-    false
   end
 
   def add_station(station)

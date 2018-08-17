@@ -21,8 +21,7 @@ module Validation
   # for validations
   module InstanceMethods
     def validate!
-      valh = self.class.validates
-      valh.each do |name, opt|
+      self.class.validates.each do |name, opt|
         opt.each { |t, f| send(t, name, f) }
       end
       true

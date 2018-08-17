@@ -1,4 +1,7 @@
 load './instance_counter.rb'
+load './validation.rb'
+load './accessors.rb'
+
 load './company.rb'
 load './station.rb'
 load './route.rb'
@@ -29,6 +32,7 @@ Choose action:
   13  - Display routes list
   14  - Display cars list (in train)
   15  - Load/Unload car
+  16  - Speed change/view (by train)
 (Enter 'stop' for exit)
 MENU_TEXT
 # rubocop:enable Layout/IndentHeredoc
@@ -171,7 +175,7 @@ while choise != 'stop'
 
       train = trains.select { |t| t.number == number }.first
       if train
-        c = if train.type == 'pass'
+        c = if train.train_type == 'pass'
               print 'Enter number of seats: '
               nums = gets.to_i
 
@@ -255,15 +259,12 @@ while choise != 'stop'
     when '12'
       puts 'Cur.St    Number     Type     Cars    Company name    Route'
       trains.each do |t|
-        bname = t.route.st_begin.name
-        ename = t.route.st_end.name
-
-        rr = t.route.nil?   ? '' : "#{bname}-#{ename}"
+        rr = t.route ? "#{t.route.st_begin.name}-#{t.route.st_end.name}" : ''
         s  = t.station.nil? ? '' : t.station.name
 
         puts "#{s.ljust(8, ' ')} " \
           "#{t.number.to_s.rjust(7, ' ')}   " \
-          "#{t.type.rjust(6, ' ')}" \
+          "#{t.train_type.rjust(6, ' ')}" \
           "#{t.cars_count.to_s.rjust(9, ' ')}" \
           "#{t.company_name.to_s.rjust(17, ' ')}     " \
           "#{rr}"
@@ -287,7 +288,7 @@ while choise != 'stop'
         puts 'Cur.St   train   type   cars count    ' \
           'cars detalization (car number/reserved/vacant/total)'
         s = train.station.nil? ? 'none' : train.station.name
-        c = if train.type == 'pass'
+        c = if train.train_type == 'pass'
               train.cars.map do |car|
                 [
                   car.object_id.to_s,
@@ -309,7 +310,7 @@ while choise != 'stop'
 
         puts "#{s.ljust(8, ' ')}" \
           "#{train.number.rjust(6, ' ')}  " \
-          "#{train.type.rjust(5, ' ')}       " \
+          "#{train.train_type.rjust(5, ' ')}       " \
           "#{train.cars_count.to_s.rjust(6, ' ')}    " \
           "#{c.join(' , ')}"
       end
@@ -322,7 +323,7 @@ while choise != 'stop'
       if train.nil?
         puts 'Train not found.'
       else
-        c = if train.type == 'pass'
+        c = if train.train_type == 'pass'
               train.cars.map do |car|
                 [
                   car.object_id.to_s,
@@ -367,6 +368,29 @@ while choise != 'stop'
       end
 
     when '16'
+      puts 'Train    Speed   SpeedHistory'
+      trains.each do |t|
+        puts "#{t.number.rjust(8, ' ')}" +
+          "#{t.speed.to_s.rjust(6, ' ')}" +
+          "   #{t.speed_history.join(',')}"
+      end
+      puts
+      print 'Enter train number for accelerate or stop: '
+      number = gets.chomp
+
+      train = trains.select { |t| t.number == number }.first
+
+      if train
+          puts 'what do you want: '
+          puts '  1 - accelerate'
+          puts '  2 - stop'
+          gets.to_i ? train.accelerate : train.breake
+
+      else
+        puts 'Train not found.'
+      end
+
+    when '17'
       print 'Enter train number to set company name: '
       number = gets.chomp
 

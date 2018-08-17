@@ -2,9 +2,10 @@
 class Train
   include InstanceCounter
   include Company
+  include Validation
   extend Accessors
 
-  attr_reader :route, :speed, :type, :cars
+  attr_reader :route, :train_type, :cars
 
   attr_accessor_with_history :speed
 
@@ -12,13 +13,21 @@ class Train
 
   @@all = {} # rubocop:disable Style/ClassVars
 
-  TRAIN_NUMBER = /^([a-z]{3}|\d{3})(-{1}[a-z]{2}|-{1}\d{2}|[a-z]{3}|\d{3})$/i
+  TRAIN_NUMBER  = /^([a-z]{3}|\d{3})(-{1}[a-z]{2}|-{1}\d{2}|[a-z]{3}|\d{3})$/i
+  TRAIN_TYPE    = /^((pass){1}|(cargo){1})$/
+
+  validate :number, :presence
+  validate :number, :format, TRAIN_NUMBER
+
+  validate :train_type, :presence
+  validate :train_type, :format, TRAIN_TYPE
+  validate :train_type, :type, String
 
   def initialize(number, type)
     @number     = number
-    @type       = type
+    @train_type = type
 
-    self.speed = 0
+    self.speed  = 0
 
     @st_number  = nil
     @route      = nil
@@ -29,26 +38,12 @@ class Train
     register_instance
   end
 
-  def validate!
-    raise 'Number can\'t be nil' if number.nil?
-    raise 'Number should be at least 3' if number.length < 3
-    raise 'Train number has bad format' if number !~ TRAIN_NUMBER
-    raise 'Type should be pass or cargo' unless %w[cargo pass].member?(type)
-    true
-  end
-
-  def valid?
-    validate!
-  rescue StandardError
-    false
-  end
-
   def accelerate
-    @speed += 5
+    self.speed += 5
   end
 
   def breake
-    @speed = 0
+    self.speed = 0
   end
 
   def route=(route)
